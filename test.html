@@ -1,0 +1,32 @@
+<!--
+ * @Description: 
+ * @Author: mengting.zhang <mengting.zhang@hand-china.com>
+ * @LastEditTime: 2021-09-15 10:59:09
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const p1 = Promise.resolve(1)
+    const p2 = Promise.reject(2)
+    const p3 = Promise.reject(3)
+    
+    p2.then((data1) => {
+      console.log('data1: ', data1)
+    }, (reason1) => {
+      console.log('reason1: ', reason1)
+    }).then((data2) => {
+      console.log('data2 resolve: ', data2)
+    }, reason2 => {
+      console.log('reason2 reject: ', reason2)
+    })
+    
+  </script>
+</body>
+</html>

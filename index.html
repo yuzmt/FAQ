@@ -1,0 +1,628 @@
+<!--
+ * @Description: 
+ * @Author: mengting.zhang <mengting.zhang@hand-china.com>
+ * @LastEditTime: 2021-09-23 15:38:48
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  .box {
+    width: 100px;
+    height: 100px;
+    background-color: yellowgreen;
+    /* margin-top: 50px; */
+  }
+  .inner {
+    width: 50px;
+    height: 50px;
+    background-color: antiquewhite;
+    margin-top: 30px;
+  }
+</style>
+<body>
+  <div class="box">
+    <p class="inner">inner</p>
+  </div>
+  <p>ppppppppppp</p>
+  <a href="#">a</a>
+  <span>1</span>
+  <span>2</span>
+  <span>3</span>
+  <script>
+    // 1.
+    // var name = 'outer'
+    // var foo1 = {
+    //   name: 'foo1',
+    //   fn: function () {
+    //     console.log(this.name)
+    //   }
+    // }
+    // var foo2 = {
+    //   name: 'foo2',
+    //   fn: function(fun) {
+    //     fun()
+    //   }
+    // }
+    // var fun = foo1.fn
+    // fun() // outer
+    // foo1.fn() // foo1
+    // foo2.fn(foo1.fn) // outer
+    // foo2.fn = foo1.fn
+    // foo2.fn() // foo2
+
+    // 2. 
+    // var fun = function () {
+    //   this.name = '123'
+    //   // return {
+    //   //   name: '222'
+    //   // }
+    // }
+    // Person.prototype = {
+    //   info: {
+    //     name: 'zhang'
+    //   }
+    // }
+    // function Person() {
+      
+    // }
+    // var person = new Person()
+    // person.info.name = '11111'
+    // var p = new fun()
+
+    // 3.
+    // "use strict"
+    // function foo() {
+    //   console.log(this)
+    // }
+    // foo()
+
+    // var obj = {
+    //   name: 'obj name',
+    //   foo: function () {
+    //     console.log(this)
+    //   },
+    //   inner: {
+    //     name: 'inner name',
+    //     fn: function () {
+    //       console.log(this)
+    //     }
+    //   }
+    // }
+    // obj.inner.fn()
+
+    // 4.
+    // var bar = {
+    //   a: '001',
+    // }
+    // function print() {
+    //   bar.a = 'a'
+    //   Object.prototype.b = 'b'
+    //   return function () {
+    //     console.log(bar)
+    //     console.log(bar.a)
+    //     console.log(bar.b)
+    //   }
+    // }
+    // print()()
+
+    // 5. 深度克隆
+    /*
+      遍历原始对象
+      - 判断是原始值还是引用值
+      - 判断是对象还是数组
+      - 建立相应的数组或对象
+    */
+    // var obj = {
+    //   name: 'zhang',
+    //   arr: [1, 2, 3]
+    // }
+    // var obj1 = {}
+    // function deepClone(origin, target) {
+    //   var target = target || {}
+    //   for(var prop in origin) {
+    //     if(origin.hasOwnProperty(prop)) { // 避免拷贝原型上的东西
+    //       if(origin[prop] !== null && typeof(origin[prop]) === 'object') {
+    //         Object.prototype.toString.call(origin[prop]) === '[object Array]' ? target[prop] = [] : target[prop] = {}
+    //         deepClone(origin[prop], target[prop])
+    //       } else {
+    //         target[prop] = origin[prop]
+    //       }
+    //     }
+    //   }
+    //   return target
+    // }
+    // deepClone(obj, obj1)
+
+    // 6.
+    // var foo1 = {
+    //   name: 'foo1',
+    //   fn: function () {
+    //     console.log(this.name)
+    //   }
+    // }
+    // var foo2 = {
+    //   name: 'foo2',
+    // }
+    // foo1.fn.call(foo2)
+    // foo1.fn.bind(foo2)()
+    // foo1.fn.apply(foo2)
+
+    // 7.
+    // var foo = 123
+    // function print() {
+    //   this.foo = 234
+    //   console.log(foo)
+    // }
+
+    // new print() // 123
+    
+    // 8.
+    // var foo = 123
+    // function print() {
+    //   var temp = {}
+    //   this.foo = 234
+    //   return 1
+    // }
+
+    // var print1 = new print()
+    // console.log(print1.foo)
+
+
+    // 9.
+    // function foo() {
+    //   var id = 1;
+    //   setTimeout(function () {
+    //     console.log('id:', this.id);
+    //   }, 0);
+    // }
+
+    // var id = 21;
+
+    // foo()
+
+    // foo.call({ id: 42 });
+
+    // 10.
+    // var s2 = 666
+    // function Timer() {
+    //   this.s1 = 0;
+    //   this.s2 = 0;
+    //   // 箭头函数
+    //   setInterval(() => this.s1++, 1000);
+    //   // 普通函数
+    //   setInterval(function () {
+    //     this.s2++;
+    //   }, 1000);
+    // }
+
+    // var timer = new Timer();
+
+    // setTimeout(() => console.log('s1: ', timer.s1), 3100); // 3
+    // setTimeout(() => console.log('s2: ', timer.s2), 3100); // 0
+    // setTimeout(() => console.log('s2: ', this.s2), 3100); // 669
+
+    // 11.
+    // var handler = {
+    //   id: '123456',
+
+    //   init: function() {
+    //     return () =>  {console.log(this.id)}
+    //   },
+
+    //   doSomething: function(type) {
+    //     console.log('Handling ' + type  + ' for ' + this.id);
+    //   }
+    // };
+
+    // 12.
+    // const actions = [
+    //   { type: 'ADD', payload: 0 },
+    //   { type: 'ADD', payload: 1 },
+    //   { type: 'ADD', payload: 2 }
+    // ];
+    // const total = actions.reduce((state = defaultState, action) => {
+    //   switch (action.type) {
+    //     case 'ADD':
+    //       return state + action.payload;
+    //     default: 
+    //       return state;
+    //   }
+    // }, 0)
+    // console.log('total', total)
+
+    // 13.
+    // const combineReducers = reducers => {
+    //   return (state = {}, action) => {
+    //     return Object.keys(reducers).reduce(
+    //       (nextState, key) => {
+    //         nextState[key] = reducers[key](state[key], action);
+    //         return nextState;
+    //       },
+    //       {} 
+    //     );
+    //   };
+    // };
+    // function chatLog(state, action) {
+    //   return state + 1
+    // }
+    // const reducer = combineReducers({
+    //   a: () => chatLog(1, 'ADD'),
+    //   b: () => 2,
+    //   c: () => 3
+    // })
+
+    // 14.
+    // function HtmlChange(node, targetNode, color) {
+    //   this.node = node
+    //   this.color = color
+    //   this.targetNode = targetNode
+    //   this.init()
+    // }
+
+    // HtmlChange.prototype = {
+    //   init: function () {
+    //     this.node.onclick = this.onBtnClick.bind(this)
+    //   },
+    //   onBtnClick: function () {
+    //     this.targetNode.style.color = this.color
+    //   }
+    // }
+    // new HtmlChange(btn, span, 'red')
+
+    // 15. 反转数
+    // var reverse = function(x) {
+    //   let rev = 0;
+    //   while (x !== 0) {
+    //     console.log('x: ', x)
+    //     const digit = x % 10;
+    //     x = ~~(x / 10);
+    //     rev = rev * 10 + digit;
+    //     console.log('rev', rev)
+    //     if (rev < Math.pow(-2, 31) || rev > Math.pow(2, 31) - 1) {
+    //       return 0;
+    //     }
+    //   }
+    //   return rev;
+    // };
+
+    // 16.
+    // Promise.resolve().then(() => {
+    //   console.log(1);
+    //   throw new Error('error')
+    // })
+    // .catch(() => { console.log(2); })
+    // .then(() => { console.log(3); })
+    // .catch(() => { console.log(4) })
+
+    // 17.
+    // async function async1() {
+    //   console.log('async1 start');
+    //   await async2(); // await 的后面，都可以看作是 callback 里的内容，即异步 // 类似 eventloop, setTimeout(cb1);
+    //   console.log('async1 end');
+    // }
+    // async function async2() {
+    //   console.log('async2');
+    // }
+    // console.log('script start'); 
+    // async1(); 
+    // console.log('script end');
+
+    // script start
+    // async1 start
+    // async2
+    // script end
+    // async1 end
+
+    // 18.
+    // class print {
+    //   constructor() {
+    //     console.log(this) // => print
+    //   }
+    // }
+
+    // 19. 在向后端发送请求时候，经常会遇到请求失败重试的情况，请写一个方法，向后端发送请求，如果失败后，重试，最多重试 5 次，每次重试的间隔可以不一样，写你认为最优的代码。 ```js const retry = fetchData => { // fetchData 是一个方法，向后端发送请求， 返回一个 promise， } ```
+    
+    // const retry = (fetchData, retryCount = 5) => {
+    //   return (...args) => {
+    //     const retryWithCount = (count) => {
+    //       return fetchData(...args).catch((error) => {
+    //         if(!count) {
+    //           throw new Error(error)
+    //         }
+    //         return retryWithCount(count - 1)
+    //       })
+    //     }
+    //     return retryWithCount(retryCount)
+    //   }
+    // }
+
+    // const fetchData = (params) => Promise.reject(params)
+
+    // const retryFetchData = retry(fetchData)
+    // const res = retryFetchData('zhangSan')
+    // console.log('res', res)
+
+    /* 20. 
+      
+      桌上有一叠扑克牌，总共有 9 张，牌面可能是 1 ~ 9 的数字，
+      现在进行如下操作，将最上面一张扑克牌放到桌面另外一边，
+      将第二张放到牌叠下面，第三张牌放到桌面刚才第一张牌的上面，
+      如此循环，直到所有的扑克牌转移到桌面的另外一边。
+      现在桌面上另外一边牌的顺序是 1 ~ 9，请问下之前牌叠的顺序，请写代码。
+
+      PS: 下标为0在最上面
+
+      before: [1, 2, 3, 4, 5, 6]
+
+      1 -> [3, 4, 5, 6, 2]
+      3 -> [5, 6, 2, 4]
+      5 -> [2, 4, 6]
+      2 -> [6, 4]
+      6 -> [4]
+      4
+      
+      after: [4, 6, 2, 5, 3, 1]
+
+      1 - l: [5, 1, 2, 3, 4]      === [4, 0, 1, 2, 3]
+        - r: [6]                  === [5]
+      2 - l: [3, 5, 1, 2]         === [2, 4, 0, 1]
+          r: [6, 4]               === [5, 3]
+      3 - l: [1, 3, 5]            === [0, 2, 4]
+          r: [6, 4, 2]            === [5, 3, 1]
+      4 - l: [3, 1]               === [2, 0]
+          r: [6, 4, 2, 5]         === [5, 3, 1, 4]
+      5 - l: [3]                  === [2]
+          r: [6, 4, 2, 5, 1]      === [5, 3, 1, 4, 0]
+      6 - l: []                   === []
+          r: [6, 4, 2, 5, 1, 3]   === [5, 3, 1, 4, 0, 2]
+    */
+
+    // function getOriginArr(originArr, targetArr) {
+    //   let l = originArr || [];
+    //   let r = targetArr || [];
+    //   let len1 = l.length - 1;
+    //   let len2 = l.length - 2;
+    //   if(l.length <= 2) {
+    //     r = [...r, ...l.reverse()]
+    //     l = []
+    //     console.log([(l[len2]), ...(l.slice(0, len2))])
+    //     return r;
+    //   }
+    //   r.push(l[len1])
+    //   l = [(l[len2]), ...(l.slice(0, len2))]
+    //   return getOriginArr(l, r)
+    // }
+    // console.log(getOriginArr([1, 2, 3, 4, 5, 6]));
+
+    // function getInitArr(res) {
+    //   if(res.length < 3) return res;
+    //   let keyArr = [];
+    //   let cloneRes = Object.keys(res);
+    //   let isOdd = true;
+    //   let initArr = [];
+    //   while(cloneRes.length) {
+    //     if(isOdd) {
+    //       keyArr.push(cloneRes.shift());
+    //     } else {
+    //       cloneRes.push(cloneRes.shift());
+    //     }
+    //     console.log(keyArr, cloneRes)
+    //     isOdd = !isOdd;
+    //   };
+    //   for(let i = 0; i < res.length; i++) {
+    //     initArr[keyArr[i]] = res[i];
+    //   };
+    //   return initArr;
+    // }
+    // console.log(getInitArr([4, 6, 2, 5, 3, 1]));
+
+    /*
+      21. 统计一下 https://www.qiandaoapp.com/ 页面中总共有多少种元素
+      每种元素多少个输出 `{div: 12, span: 23, ... }` 格式。
+    */
+    // const getTagKinds = () => {
+    //   const data = {}
+    //   const oElements = Array.from(document.getElementsByTagName('*'))
+    //   console.log(document.getElementsByTagName('*'), oElements)
+    //   oElements.forEach(i => {
+    //     const tagName = i.tagName.toLocaleLowerCase();
+    //     data[tagName] ? data[tagName] ++ : data[tagName] = 1
+    //   })
+    //   return data
+    // }
+
+    // 22. 
+    // var o = {};
+    // Object.prototype.value = '123'
+    // Object.defineProperty(o, "a", { value : 1, enumerable: true });
+    // Object.defineProperty(o, "b", { value : 2, enumerable: false });
+    // Object.defineProperty(o, "c", { value : 3 }); // enumerable 默认为 false
+    // o.d = 4; // 如果使用直接赋值的方式创建对象的属性，则 enumerable 为 true
+    // Object.defineProperty(o, Symbol.for('e'), {
+    //   value: 5,
+    //   enumerable: true
+    // });
+    // Object.defineProperty(o, Symbol.for('f'), {
+    //   value: 6,
+    //   enumerable: false
+    // });
+    // console.log(o)
+    // for(let key in o) {
+    //   console.log(key, o[key], o.hasOwnProperty(key))
+    // }
+
+    // function withValue(value) {
+    //   var d = withValue.d || (
+    //   withValue.d = {
+    //     enumerable: false,
+    //     writable: false,
+    //     configurable: false,
+    //     value: null
+    //   });
+    //   d.value = value;
+    //   return d;
+    // }
+    // console.log(withValue('static') === withValue('fix'))
+
+    // 23.
+    // function updateView() {
+    //   console.log('视图更新');
+    // }
+    // // 重新定义属性，监听起来
+    // function defineReactive(target, key, value) {
+    //   console.log(target, key, value)
+    //   observer(value)
+    //   // 核心API
+    //   Object.defineProperty(target, key, {
+    //     get() {
+    //       return value
+    //     },
+    //     set(newValue) {
+    //       if(newValue !== value) {
+    //         observer(newValue)
+    //         // 设置新值
+    //         // 注意，value 一直在闭包中，此处设置完以后，再get也是获取最新的值
+    //         value = newValue;
+    //         updateView();
+    //       }
+    //     }
+    //   })
+    // }
+    // // 监听对象属性
+    // function observer(target) {
+    //   console.log('target', target)
+    //   if(target === null || typeof target !== 'object') {
+    //     // 不是对象或数组
+    //     return target;
+    //   }
+    //   // 重新定义各个属性（for in 也可以遍历数组）
+    //   for(let key in target) {
+    //     defineReactive(target, key, target[key])
+    //   }
+    // }
+    // // 准备数据
+    // const data = {
+    //   name: '张三',
+    //   age: 20,
+    //   hobbit: {
+    //     eating: 'apple'
+    //   }
+    // }
+    // // 监听数据
+    // observer(data)
+    // // data.name = '李四'; // 视图更新
+    // // data.age = 21; // 视图更新
+    // // console.log(data.age); // 21
+
+    // 24
+//     var name = "The Window";
+//     var object = {
+//       name : "My Object",
+//       getNameFunc : function(){
+//         var that = this
+//         return function(){
+//           return that.name;
+//         };
+//       }
+//     };
+
+// console.log(object.getNameFunc()());
+
+  // 25.
+  // var removeDuplicates = function (nums) {
+  //   if(nums == null || nums.length == 0) return 0;
+  //   let p = 0,
+  //     q = 1;
+  //   while (q < nums.length) {
+  //     if(nums[p] !== nums[q]) {
+  //       nums[p + 1] = nums[q]
+  //       p++
+  //     }
+  //     q++;
+  //   }
+  //   console.log(nums.splice(0, p+1))
+  //   return p + 1;
+  // };
+  // let arr = [0, 1, 1, 2];
+  // console.log(removeDuplicates(arr))
+
+  // 26.
+  // var removeDuplicates = function (nums, k) {
+  //   for (let p = 0; p <= k; p++) {
+  //     console.log(p, nums[p + 1], nums[p])
+  //     nums[p + 1] = nums[p];
+  //   }
+  //   console.log(nums);
+  // };
+  // removeDuplicates([0, 1, 2], 2);
+
+  // 27. 存在重复元素
+  var containsDuplicate = function(nums) {
+    // const map = new Map()
+    // for(var v of nums) {
+    //   if(map.get(v)) {
+    //     break
+    //   } else {
+    //     map.set(v, v)
+    //   }
+    // }
+    const map = new Set(nums)
+    return nums.length !== map.size
+  };
+
+  // 28. 只出现一次的数字
+  // var singleNumber = function(nums) {
+  //   const map = new Map()
+  //   let result;
+  //   nums.forEach(v => {
+  //     if(map.get(v)) {
+  //       map.set(v, map.get(v) + 1)
+  //     } else {
+  //       map.set(v, 1)
+  //     }
+  //   })
+  //   for(let [key, value] of map.entries()) {
+  //     console.log(key, value)
+  //     if(value === 1) {
+  //       result = key
+  //       break
+  //     }
+  //   }
+  //   return result
+  // }
+
+  // 29. 
+  // let i = 0;
+  // for(i; i<=3; i++) {
+  //   setTimeout(() => {
+  //     console.log(i)
+  //   }, 100)
+  // }
+
+  // 30.
+  // function unique(arr) {
+  //   var res = arr.filter(function(item, index, array) {
+  //     console.log(item, index, array, array.indexOf(item))
+  //     return array.indexOf(item) === index
+  //   })
+  //   return res
+  // }
+
+  // 31.
+  function Fun(x) {
+    this.x = x
+  }
+  const f1 = new Fun();
+  const f2 = new Fun();
+  f1.__proto__.getName = function() {
+    console.log('getName')
+  }
+</script>
+</body>
+</html>
