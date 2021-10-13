@@ -1,0 +1,94 @@
+<!--
+ * @Description: 
+ * @Author: mengting.zhang <mengting.zhang@hand-china.com>
+ * @LastEditTime: 2021-09-12 18:19:02
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const data = {
+      name: 'zhang',
+      age: 20,
+      like: {
+        a: 1,
+        value: {
+          b: 23
+        }
+      }
+    }
+    function observer(data) {
+      if(!data || typeof data !== 'object') return;
+      Object.keys(data).forEach(key => {
+        defineReactive(data, key, data[key])
+      })
+    }
+
+    // 监听器
+    function defineReactive(target, key, value) {
+      observer(value)
+
+      const dep = new Dep();
+      Object.defineProperty(target, key, {
+        get: function() {
+          Dep.target && Dep.addSubs(Dep.target)
+          return value
+        },
+        set: function(newVal) {
+          if(newVal === value) return;
+          value = newVal
+          dep.notify()
+        }
+      })
+    }
+
+    observer(data)
+
+    // 2. 消息订阅器
+    function Dep() {
+      this.subs = []
+    }
+
+    Dep.prototype = {
+      addSubs: function(sub) {
+        this.subs.push(sub)
+      },
+      notify: function() {
+        this.subs.forEach(sub => sub.update())
+      }
+    }
+
+    // 3. 订阅者
+    function Watcher(vm, exp, cb) {
+      this.vm = vm
+      this.exp = exp
+      this.cb = cb
+      this.value = this.get()
+    }
+
+    Watcher.prototype = {
+      get: function(key) {
+        Dep.target = this
+        var value = this.vm[exp]
+        Dep.target = null
+        return value
+      },
+      update: function() {
+        var value = this.get()
+        var oldValue = this.value
+        if(value !== oldValue) {
+          this.value = value
+          this.cb.call(this.vm, value, oldValue)
+        }
+      },
+    }
+
+  </script>
+</body>
+</html>

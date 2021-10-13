@@ -1,0 +1,37 @@
+<!--
+ * @Description: 
+ * @Author: mengting.zhang <mengting.zhang@hand-china.com>
+ * @LastEditTime: 2021-09-05 16:33:48
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>极简双向绑定</title>
+</head>
+<body>
+  <h1>极简双向绑定</h1>
+  <input type="text" id="inputId">
+  <p id="pId"></p>
+  <script>
+    const obj = {}
+    Object.defineProperty(obj, 'name', {
+      get: () => {
+
+      },
+      set: (value) => {
+        /*
+          如果页面上有非常多地方需要渲染, 这种方式对性能无疑是灾难
+        */
+        document.getElementById('inputId').value = value || ''
+        document.getElementById('pId').innerHTML = value || ''
+      }
+    })
+    document.addEventListener('keyup', (e) => {
+      obj.name = e.target.value
+    })
+  </script>
+</body>
+</html>
