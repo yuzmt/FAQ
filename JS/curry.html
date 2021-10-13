@@ -1,0 +1,52 @@
+<!--
+ * @Description: 
+ * @Author: mengting.zhang <mengting.zhang@hand-china.com>
+ * @LastEditTime: 2021-08-31 11:11:40
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>curry</title>
+</head>
+<body>
+	<script>
+		// 柯里化本质: 降低通用性, 提高实用性
+		// 函数参数降维处理
+
+		function add(a, b, c) {
+			return a + b + c
+		}
+
+		function curry(fn, args = []) {
+			return (...arg) => {
+				const _args = [ ...args, ...arg]
+				_args.length >= fn.length ? fn(..._args) : curry(fn, _args)
+			}
+		}
+
+		const _add = curry(add)
+		console.log(_add(1, 2)(3)) // print 6
+		console.log(_add(1)(2)(3)) // print 6
+
+
+		// 基于柯里化来判断输入值的 type 类型
+
+		function isType(type, val) {
+			return Object.prototype.toString.call(val) === `[object ${type}]`
+		}
+
+		// 如果不用柯里化
+		console.log(isType('Object', {}))
+
+		// 使用柯里化, 就可以衍生出更多便捷的函数
+		const _isType = curry(isType)
+		const isObject = _isType('Object')
+		const isFunction = _isType('Function')
+		console.log(isObject({}))
+		console.log(isFunction(parseFloat))
+	</script>
+</body>
+</html>

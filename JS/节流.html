@@ -1,0 +1,89 @@
+<!--
+ * @Description: 
+ * @Author: mengting.zhang <mengting.zhang@hand-china.com>
+ * @LastEditTime: 2021-09-06 16:03:39
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>节流</title>
+  <style>
+    #container{
+      width: 100%;
+      height: 200px;
+      line-height: 200px;
+      text-align: center;
+      color: #fff;
+      background-color: #444;
+      font-size: 30px;
+    }
+</style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    var count = 1
+    var container = document.getElementById('container')
+
+    function getUserAction() {
+      container.innerHTML = count++;
+    }
+    
+    // container.onmousemove = getUserAction
+
+    /**
+     * 节流
+     * 原理: 持续触发一个事件, 每隔一段时间, 只执行一次事件
+     * 实现方式: 时间戳 or 定时器
+     * 根据首次是否执行以及结束后是否执行, 效果有所不同, 实现方式也所有不同
+     * leading: 代表首次是否执行
+     * trailing: 结束后是否再执行一次
+    */
+
+    /**
+     * 方法一: 时间戳
+    */
+    function throttleNow(fn, wait) {
+      var context, args;
+      var prev = 0
+      return function () {
+        var now = +new Date() // 时间戳
+        context = this
+        args = arguments
+        if(now - prev > wait) {
+          fn.apply(context, args)
+          prev = now;
+        }
+      }
+    }
+
+    /**
+     * 方法二: 定时器
+    */
+    function throttleTimer(fn, wait) {
+      var context, args, timer;
+      return function() {
+        context = this;
+        args = arguments;
+        if(!timer) {
+          timer = setTimeout(function() {
+            fn.apply(context, args)
+            timer = null
+          }, wait)
+        }
+      }
+    }
+
+    /**
+     * 比较
+     * throttleNow会立即执行, throttleTimer会在n秒后第一次执行
+     * throttleNow停止触发后没有办法再执行事件, throttleTimer停止触发后依然会再执行一次事件
+    */
+
+    container.onmousemove = throttleNow(getUserAction, 3000)
+  </script>
+</body>
+</html>

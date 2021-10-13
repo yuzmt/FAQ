@@ -1,0 +1,58 @@
+<!--
+ * @Description: 
+ * @Author: mengting.zhang <mengting.zhang@hand-china.com>
+ * @LastEditTime: 2021-09-06 11:36:15
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>防抖</title>
+  <style>
+    #container{
+      width: 100%;
+      height: 200px;
+      line-height: 200px;
+      text-align: center;
+      color: #fff;
+      background-color: #444;
+      font-size: 30px;
+    }
+</style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    var count = 1
+    var container = document.getElementById('container')
+
+    function getUserAction() {
+      container.innerHTML = count++;
+    }
+    
+    // container.onmousemove = getUserAction
+
+    /**
+     * 防抖
+     * 原理: 在触发事件n秒后才会执行; 如果在一个时间触发的第n秒又触发了这个事件, 则以新事件的时间为准, n秒后才执行, 简而言之, 触发完事件n秒内不再触发事件
+    */
+
+    function debounce(fn, wait) {
+      var timer, result;
+      return function () {
+        const context = this
+        const args = arguments
+        clearTimeout(timer)
+        timer = setTimeout(function() {
+          result = fn.apply(context, args)
+        }, wait)
+        return result
+      }
+    }
+
+    container.onmousemove = debounce(getUserAction, 1000)
+  </script>
+</body>
+</html>

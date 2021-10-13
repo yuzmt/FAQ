@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  1. 传参方式不同: GET 请求使用 URL 或 Cookie 传参, 而 POST 将数据放在 Body 中;
+  2. 长度限制不同: GET 的 URL 上拼接的参数会有长度限制, POST 可以传输很多数据, 但是归根结底也是有一定的限制的, 只是比 GET 请求要多;
+  3. 安全性不同: POST 请求比 GET 请求更安全, 但是这种安全也只是相对的;
+
+  注: 1. 其实 HTTP 协议里没有规定 POST 数据就要放在 BODY 里, 也没有要求 GET 数据就一定要放在 URL 中而不能放在 BODY 中;
+      2. HTTP 协议对 GET 和 POST 都没有对数据的长度进行限制, 造成数据限制主要有以下两个原因
+        2.1 早期浏览器会对 URL 长度进行限制(浏览器 URL 输入框)
+        2.2 浏览器会对 Content-length 进行限制, 这是为了服务器安全和稳定
+</body>
+</html>
