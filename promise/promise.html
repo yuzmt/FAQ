@@ -1,0 +1,155 @@
+<!--
+ * @Description: 
+ * @Author: mengting.zhang <mengting.zhang@hand-china.com>
+ * @LastEditTime: 2021-07-30 17:39:27
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function MyPromise(executor) {
+      let _this = this
+      _this.status = 'pending'
+      _this.data = null
+      _this.resolveCB = []
+      _this.rejectCB = []
+      function resolve(value) {
+        if(_this.status === 'pending') {
+          _this.status = 'fulfilled'
+          _this.data = value
+          _this.resolveCB.forEach(ele => ele())
+        }
+      }
+      function reject(value) {
+        if(_this.status === 'pending') {
+          _this.status = 'rejected'
+          _this.data = value
+          _this.rejectCB.forEach(ele => ele())
+        }
+      }
+      try {
+        executor(resolve, reject)
+      } catch (error) {
+        reject(error)
+      }
+    }
+
+    function ResolutionReturnPromise(nextPromise, returnValue, res, rej, v) {
+      if(returnValue instanceof MyPromise) {
+        returnValue.then(function(val) {
+          res(val)
+        }, function(reason) {
+          rej(reason)
+        })
+      } else {
+        res(returnValue)
+      }
+    }
+
+    MyPromise.prototype.then = function (onFulfilled, onRejected) {
+
+      if(!onFulfilled) {
+        onFulfilled = function (val) {
+          return val
+        }
+      }
+      if(!onRejected) {
+        onRejected = function (res) {
+          throw new Error(res)
+        }
+      }
+      let _this = this
+      let nextPromise = new MyPromise(function(res, rej) {
+        if(_this.status === 'fulfilled') {
+          setTimeout(() => {
+            try {
+              // const nextValue = onFulfilled(_this.data)
+              // res(nextValue)
+              const nextValue = onFulfilled(_this.data)
+              // nextPromise 之所以能拿到是这块代码在setTimeout里面
+              ResolutionReturnPromise(nextPromise, nextValue, res, rej, 1)
+            } catch (error) {
+              rej(error)
+            }
+          }, 0)
+        } else if(_this.status === 'rejected') {
+          setTimeout(() => {
+            try {
+              const nextValue = onRejected(_this.data)
+              ResolutionReturnPromise(nextPromise, nextValue, res, rej, 2)
+            } catch (error) {
+              rej(error)
+            }
+          }, 0)
+        }
+        if(_this.status === 'pending') {
+          _this.resolveCB.push(function(){
+            try {
+              const nextValue = onFulfilled(_this.data)
+              ResolutionReturnPromise(nextPromise, nextValue, res, rej, 3)
+            } catch (error) {
+              rej(error)
+            }
+          })
+          _this.rejectCB.push(function(){
+            try {
+              const nextValue = onRejected(_this.data)
+              ResolutionReturnPromise(nextPromise, nextValue, res, rej, 4)
+            } catch (error) {
+              rej(error)
+            }
+          })
+        }
+      })
+      return nextPromise
+    }
+
+    MyPromise.prototype.catch = function(errorFun) {
+      console.log(this)
+      this.then(null, errorFun)
+    }
+
+    MyPromise.prototype.race = function(promiseList) {
+      console.log(promiseList)
+      promiseList.forEach(ele => {
+        console.log('status', ele.status)
+      })
+    }
+
+    function test(delay, value) {
+      return new MyPromise((resolve, reject) => {
+        setTimeout(() => {
+          reject(value)
+        }, delay)
+      })
+    }
+
+    let p = new MyPromise()
+
+    p.race([test(1000, 1), test(200, 2), test(100, 3)]).then((value) => {
+      console.log('value', value)
+    }, (reason) => {
+      console.log('reason', reason)
+    })
+    
+    // new MyPromise((resolve, reject) => {
+    //   resolve(3)
+    // }).then((val) => {
+    //   throw new Error('12321321')
+    // }, (rej) => {
+    //   // return new MyPromise((resolve, reject) => {
+    //   //   reject(4)
+    //   // })
+    // }).catch((err) => {
+    //   console.log(err)
+    // })
+
+  </script>
+</body>
+</html>

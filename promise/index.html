@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input id="myInput" type="text">
+  <button id="myButton">点击</button>
+  <script>
+    let arr = []
+    let oBtn = document.getElementById('myButton')
+    let oInput = document.getElementById('myInput')
+    oBtn.onclick = function() {
+      arr.push(oInput.value)
+      newShow({name: 'zhang'})
+    }
+    function show(data) {
+      console.log('data', data)
+    }
+
+    function after(num, func) {
+      return function () {
+        console.log(arguments, Object.prototype.toString.call(arguments) )
+        if(--num === 0) {
+          func.apply(window, arguments)
+        }
+      }
+    }
+
+    let newShow = after(5, show)
+
+  </script>
+</body>
+</html>
